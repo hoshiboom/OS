@@ -49,10 +49,11 @@ CC		:= $(GCCPREFIX)gcc
 CFLAGS	:= -fno-builtin -fno-PIC -Wall -ggdb -m32 -gstabs -nostdinc $(DEFS)
 CFLAGS	+= $(shell $(CC) -fno-stack-protector -E -x c /dev/null >/dev/null 2>&1 && echo -fno-stack-protector)
 CTYPE	:= c S
+# -fno-PIC不生成位置无关代码
 
 LD      := $(GCCPREFIX)ld
 LDFLAGS	:= -m $(shell $(LD) -V | grep elf_i386 2>/dev/null | head -n 1)
-LDFLAGS	+= -nostdlib
+LDFLAGS	+= -nostdlib	#不链接标准库和C初始化函数
 
 OBJCOPY := $(GCCPREFIX)objcopy
 OBJDUMP := $(GCCPREFIX)objdump
