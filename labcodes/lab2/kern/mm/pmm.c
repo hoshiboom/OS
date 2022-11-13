@@ -326,7 +326,7 @@ pmm_init(void) {
 // return vaule: the kernel virtual address of this pte
 pte_t *
 get_pte(pde_t *pgdir, uintptr_t la, bool create) {
-    /* LAB2 EXERCISE 2: YOUR CODE
+    /* LAB2 EXERCISE 2: 2013851
      *
      * If you need to visit a physical address, please use KADDR()
      * please read pmm.h for useful macros
@@ -336,8 +336,10 @@ get_pte(pde_t *pgdir, uintptr_t la, bool create) {
      * Some Useful MACROs and DEFINEs, you can use them in below implementation.
      * MACROs or Functions:
      *   PDX(la) = the index of page directory entry of VIRTUAL ADDRESS la.
+     *   用PDX函数找到la对应的二级页表页号，&pgdir[PDX(la)]为一级页表项（目录表项）的地址，里面的内容有二级页表基地址
      *   KADDR(pa) : takes a physical address and returns the corresponding kernel virtual address.
      *   set_page_ref(page,1) : means the page be referenced by one time
+     *   注：page->ref = val;第二个参数就是ref的值，不是加一
      *   page2pa(page): get the physical address of memory which this (struct Page *) page  manages
      *   struct Page * alloc_page() : allocation a page
      *   memset(void *s, char c, size_t n) : sets the first n bytes of the memory area pointed by s
@@ -348,17 +350,42 @@ get_pte(pde_t *pgdir, uintptr_t la, bool create) {
      *   PTE_U           0x004                   // page table/directory entry flags bit : User can access
      */
 #if 0
-    pde_t *pdep = NULL;   // (1) find page directory entry
-    if (0) {              // (2) check if entry is not present
-                          // (3) check if creating is needed, then alloc page for page table
-                          // CAUTION: this page is used for page table, not for common data page
-                          // (4) set page reference
-        uintptr_t pa = 0; // (5) get linear address of page
-                          // (6) clear page content using memset
-                          // (7) set page directory entry's permission
+    pde_t *pdep = NULL;   // (1) find page directory entry      注：pgdir
+    if (0) {              // (2) check if entry is not present      注：访问pgdir[PDX(la)]
+                          // (3) check if creating is needed, then alloc page for page table    
+                          // CAUTION: this page is used for page table, not for common data page    注：创建二级页表，不是数据页表
+                          // (4) set page reference     注：在目录表里给这个二级页表建立表项
+        uintptr_t pa = 0; // (5) get linear address of page     注：用KADDR获取页的虚拟地址
+                          // (6) clear page content using memset    注：全0
+                          // (7) set page directory entry's permission  注：设置符号位
     }
-    return NULL;          // (8) return page table entry
+    return NULL;          // (8) return page table entry    注：返回二级页表项虚拟地址（二级页表基地址加偏移）
 #endif
+    pde_t *pdep = &pgdir[PDX(la)];
+    bool exist = *pdep & PTE_P;
+    if(exist){
+        //取目录表项里的地址为一级页表的基地址
+        pte_t* v_addr = KADDR(PDE_ADDR(pdep));
+        return vaddr[PTX(la)];
+    }
+    else if(create==1){
+        struct Page* newpage = alloc_page();
+        if(newpage==NULL)
+            {
+                cprintf("can't alloc page \n");
+                return NULL;
+            }
+        uintptr_t pa = page2pa(newpage);
+        memset(pa , 0 , PGSIZE);
+        *pdep = pa | PTE_U | PTE_W | PTE_P;
+        set_page_ref(page, 1);
+        pte_t* v_addr = KADDR(PDE_ADDR(pdep));
+        return vaddr[PTX(la)];
+    }
+    else if(create==0)
+    {
+        return NULL;
+    }
 }
 
 //get_page - get related Page struct for linear address la using PDT pgdir
