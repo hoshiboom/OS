@@ -139,7 +139,13 @@ default_alloc_pages(size_t n) {
         if (page->property > n) {
             struct Page *p = page + n;
             p->property = page->property - n;
-            list_add(&free_list, &(p->page_link));
+            //原来的代码没有实现有序链入
+            //list_add(&free_list, &(p->page_link));
+            
+            //找到第一个比剩余内存块要大的内存块，并把剩余块插到它之前
+            struct list_entry_t* it;
+            for(it=list_next(&free_list);it!=&free_list && le2page(it,page_link)->property < p->property;it=list_next(it));
+            list_add_before(it, &(p->page_link));
     }
         nr_free -= n;
         ClearPageProperty(page);
@@ -175,7 +181,12 @@ default_free_pages(struct Page *base, size_t n) {
         }
     }
     nr_free += n;
-    list_add(&free_list, &(base->page_link));
+    struct list_entry_t* it;
+    for(it=list_next(&free_list);it!=&free_list && le2page(it,page_link)->property < base->property;it=list_next(it));
+    list_add_before(it, &(base->page_link));
+    
+    //原来的代码没有实现有序链入
+    //list_add(&free_list, &(base->page_link));
 }
 
 static size_t
