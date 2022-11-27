@@ -372,6 +372,17 @@ get_pte(pde_t *pgdir, uintptr_t la, bool create) {
     }
     return NULL;          // (8) return page table entry
 #endif
+pde_t *pdep = pgdir + PDX(la);
+    if(((*pdep) & PTE_P)!=1){//如果不存在页目录项
+        if(!create)return NULL;//不需要创建则返回null
+        struct Page* ptPage;
+        assert(ptPage=alloc_page());
+        set_page_ref(ptPage,1);
+        uintptr_t pa=page2pa(ptPage);
+        memset(KADDR(pa),0,PGSIZE);
+        *pdep=((pa&~0x0FFF)| PTE_U | PTE_W | PTE_P);//未判断此页表项是否存在？
+    }
+    return ((pte_t*)KADDR((*pdep) & ~0xFFF)) + PTX(la);
 }
 
 //get_page - get related Page struct for linear address la using PDT pgdir
@@ -408,6 +419,13 @@ page_remove_pte(pde_t *pgdir, uintptr_t la, pte_t *ptep) {
      * DEFINEs:
      *   PTE_P           0x001                   // page table/directory entry flags bit : Present
      */
+     if(((*ptep)&PTE_P)==1){
+        struct Page* page=pte2page(*ptep);
+        page_ref_dec(page);
+        if(page->ref==0)free_page(page);
+        *ptep=NULL;
+        tlb_invalidate(pgdir,la);
+    }
 #if 0
     if (0) {                      //(1) check if this page table entry is present
         struct Page *page = NULL; //(2) find corresponding page to pte

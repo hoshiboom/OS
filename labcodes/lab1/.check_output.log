@@ -68,4 +68,3 @@ ebp:0x00007bf8 eip:0x00007d72 args:0xc031fcfa 0xc08ed88e 0x64e4d08e 0xfa7502a8
     <unknow>: -- 0x00007d71 --
 Welcome to the kernel debug monitor!!
 Type 'help' for a list of commands.
-K> 

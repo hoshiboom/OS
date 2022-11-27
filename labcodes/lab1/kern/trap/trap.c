@@ -47,7 +47,8 @@ idt_init(void) {
       *     Notice: the argument of lidt is idt_pd. try to find it!
       */
      extern uintptr_t __vectors[];
-     for(int i = 0; i < 256; i++){
+     int i;
+     for(i = 0; i < 256; i++){
         SETGATE(idt[i], 1, GD_KTEXT, __vectors[i], DPL_KERNEL);
      }
      SETGATE(idt[T_SWITCH_TOK], 0, GD_KTEXT, __vectors[T_SWITCH_TOK], DPL_USER);
