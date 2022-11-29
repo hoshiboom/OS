@@ -99,7 +99,9 @@ swap_out(struct mm_struct *mm, int n, int in_tick)
           v=page->pra_vaddr; 
           pte_t *ptep = get_pte(mm->pgdir, v, 0);
           assert((*ptep & PTE_P) != 0);
-
+           // page->pra_vaddr/PGSIZE = 虚拟地址对应的二级页表项索引(前20位)
+           //+1为了在页表项中区别 0 和 swap 分区的映射
+           // << 8，为了构成swap_entry_t的高24位
           if (swapfs_write( (page->pra_vaddr/PGSIZE+1)<<8, page) != 0) {
                     cprintf("SWAP: failed to save\n");
                     sm->map_swappable(mm, v, page, 0);
