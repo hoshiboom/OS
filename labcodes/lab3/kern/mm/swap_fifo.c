@@ -151,24 +151,18 @@ static int _extended_clock_swap_out_victim(struct mm_struct *mm, struct Page ** 
 
     int i; // 循环三次 寻找合适的置换页
     for (i = 0; i < 3; i++) {
-        /* 第一次循环 寻找 没被访问过的 且 没被修改过的 同时将被访问过的页的 访问位 清 0(查找 !PTE_A & !PTE_D，同时重置当前页的PTE_A)
-            第二次循环 依然是寻找没被访问过的且没被修改过的 因为到了此次循环 访问位都被清 0 了 不存在被访问过的(查找 !PTE_A & !PTE_D， 同时重置当前页的PTE_D)
-            只需要找没被修改过的即可同时将被修改过的页 修改位 清 0
-            第三次循环 还是找 没被访问过 且 没被修改过的 此时 第一次循环 已经将所有访问位 清 0 了
-             第二次循环 也已经将所有修改位清 0 了 故 在第三次循环 一定有 没被访问过 也没被修改过的 页
-        */
-        while (le != head) {
+                while (le != head) {
             struct Page *page = le2page(le, pra_page_link);            
             pte_t *ptep = get_pte(mm->pgdir, page->pra_vaddr, 0);
 
-            if (!(*ptep & PTE_A) && !(*ptep & PTE_D)) { // 没被访问过 也没被修改过 
+            if (!(*ptep & PTE_A) && !(*ptep & PTE_D)) { // 没被访问过也没被修改过 直接分配
                 list_del(le);
                 *ptr_page = page;
                 return 0;
             }
-            if (i == 0) {
+            if (i == 0) {//在第一次查找中，访问到了已经使用过的PTE，标记为未使用。
                 *ptep &= 0xFFFFFFDF;
-            } else if (i == 1) {
+            } else if (i == 1) { //在第二次查找中，访问到了已修改过的PTE，标记为未修改。
                 *ptep &= 0xFFFFFFBF;
             }
             le = le->prev;
