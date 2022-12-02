@@ -9,23 +9,23 @@ Booting from Hard Disk..(THU.CST) os is loading ...
 
 Special kernel symbols:
   entry  0xc0100036 (phys)
-  etext  0xc01090da (phys)
-  edata  0xc0126000 (phys)
-  end    0xc0127174 (phys)
-Kernel executable memory footprint: 157KB
-ebp:0xc0122f38 eip:0xc01009f5 args:0x00010094 0x00010094 0xc0122f68 0xc01000d3 
+  etext  0xc0109988 (phys)
+  edata  0xc0128000 (phys)
+  end    0xc0129174 (phys)
+Kernel executable memory footprint: 165KB
+ebp:0xc0124f38 eip:0xc01009f5 args:0x00010094 0x00010094 0xc0124f68 0xc01000d3 
     kern/debug/kdebug.c:309: print_stackframe+21
-ebp:0xc0122f48 eip:0xc0100d08 args:0x00000000 0x00000000 0x00000000 0xc0122fb8 
+ebp:0xc0124f48 eip:0xc0100d08 args:0x00000000 0x00000000 0x00000000 0xc0124fb8 
     kern/debug/kmonitor.c:129: mon_backtrace+10
-ebp:0xc0122f68 eip:0xc01000d3 args:0x00000000 0xc0122f90 0xffff0000 0xc0122f94 
+ebp:0xc0124f68 eip:0xc01000d3 args:0x00000000 0xc0124f90 0xffff0000 0xc0124f94 
     kern/init/init.c:57: grade_backtrace2+33
-ebp:0xc0122f88 eip:0xc0100101 args:0x00000000 0xffff0000 0xc0122fb4 0x0000002a 
+ebp:0xc0124f88 eip:0xc0100101 args:0x00000000 0xffff0000 0xc0124fb4 0x0000002a 
     kern/init/init.c:62: grade_backtrace1+40
-ebp:0xc0122fa8 eip:0xc0100121 args:0x00000000 0xc0100036 0xffff0000 0x0000001d 
+ebp:0xc0124fa8 eip:0xc0100121 args:0x00000000 0xc0100036 0xffff0000 0x0000001d 
     kern/init/init.c:67: grade_backtrace0+23
-ebp:0xc0122fc8 eip:0xc0100149 args:0xc01090fc 0xc01090e0 0x00001174 0x00000000 
+ebp:0xc0124fc8 eip:0xc0100149 args:0xc01099bc 0xc01099a0 0x00001174 0x00000000 
     kern/init/init.c:72: grade_backtrace+34
-ebp:0xc0122ff8 eip:0xc0100087 args:0xc0109294 0xc010929c 0xc0100c8c 0xc01092bb 
+ebp:0xc0124ff8 eip:0xc0100087 args:0xc0109b54 0xc0109b5c 0xc0100c8c 0xc0109b7b 
     kern/init/init.c:32: kern_init+80
 memory management: default_pmm_manager
 e820map:
@@ -52,7 +52,7 @@ check_vmm() succeeded.
 ide 0:      10000(sectors), 'QEMU HARDDISK'.
 ide 1:     262144(sectors), 'QEMU HARDDISK'.
 SWAP: manager = fifo swap manager
-BEGIN check_swap: count 1, total 31961
+BEGIN check_swap: count 1, total 31959
 setup Page Table for vaddr 0X1000, so alloc a page
 setup Page Table vaddr 0~4MB OVER!
 set up init env for check_swap begin!
@@ -101,17 +101,17 @@ End of Test.
 kernel panic at kern/trap/trap.c:20:
     EOT: kernel seems ok.
 stack trackback:
-ebp:0xc0122ee0 eip:0xc01009f5 args:0xc01093c8 0xc0122f24 0x00000014 0xc0122f5c 
+ebp:0xc0124ee0 eip:0xc01009f5 args:0xc0109c88 0xc0124f24 0x00000014 0xc0124f5c 
     kern/debug/kdebug.c:309: print_stackframe+21
-ebp:0xc0122f10 eip:0xc0100d79 args:0xc010956e 0x00000014 0xc0109558 0x00000000 
+ebp:0xc0124f10 eip:0xc0100d79 args:0xc0109e2e 0x00000014 0xc0109e18 0x00000000 
     kern/debug/panic.c:27: __panic+103
-ebp:0xc0122f30 eip:0xc01021ed args:0xc0122f68 0xc0100369 0xc0100318 0xc0122f5c 
+ebp:0xc0124f30 eip:0xc01021ed args:0xc0124f68 0xc0100369 0xc0100318 0xc0124f5c 
     kern/trap/trap.c:0: print_ticks+65
-ebp:0xc0122f60 eip:0xc01027c8 args:0xc0122f8c 0xc0122fc8 0xc01029bb 0xc0122f78 
+ebp:0xc0124f60 eip:0xc01027c8 args:0xc0124f8c 0xc0124fc8 0xc01029bb 0xc0124f78 
     kern/trap/trap.c:200: trap_dispatch+213
-ebp:0xc0122f80 eip:0xc01029a0 args:0xc0122f8c 0x0000807c 0x00010094 0xc0122ff8 
+ebp:0xc0124f80 eip:0xc01029a0 args:0xc0124f8c 0x0000807c 0x00010094 0xc0124ff8 
     kern/trap/trap.c:252: trap+16
-ebp:0xc0122ff8 eip:0xc01029bb args:0xc0109294 0xc010929c 0xc0100c8c 0xc01092bb 
+ebp:0xc0124ff8 eip:0xc01029bb args:0xc0109b54 0xc0109b5c 0xc0100c8c 0xc0109b7b 
     kern/trap/trapentry.S:24: <unknown>+0
 Welcome to the kernel debug monitor!!
 Type 'help' for a list of commands.

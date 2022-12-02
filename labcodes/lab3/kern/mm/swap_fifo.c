@@ -179,7 +179,7 @@ struct swap_manager swap_manager_fifo =
      .tick_event      = &_fifo_tick_event,
      .map_swappable   = &_fifo_map_swappable,
      .set_unswappable = &_fifo_set_unswappable,
-     //.swap_out_victim = &_fifo_swap_out_victim,
-     .swap_out_victim = &_extended_clock_swap_out_victim,
+     .swap_out_victim = &_fifo_swap_out_victim,
+     //.swap_out_victim = &_extended_clock_swap_out_victim,
      .check_swap      = &_fifo_check_swap,
 };

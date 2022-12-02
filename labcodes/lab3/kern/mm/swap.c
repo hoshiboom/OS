@@ -1,6 +1,7 @@
 #include <swap.h>
 #include <swapfs.h>
 #include <swap_fifo.h>
+#include <swap_extended_clock.h>
 #include <stdio.h>
 #include <string.h>
 #include <memlayout.h>
@@ -37,8 +38,8 @@ swap_init(void)
           panic("bad max_swap_offset %08x.\n", max_swap_offset);
      }
      
-
      sm = &swap_manager_fifo;
+     //sm = &swap_manager_extend_clock;
      int r = sm->init();
      
      if (r == 0)
@@ -62,7 +63,7 @@ swap_tick_event(struct mm_struct *mm)
 {
      return sm->tick_event(mm);
 }
-
+     
 int
 swap_map_swappable(struct mm_struct *mm, uintptr_t addr, struct Page *page, int swap_in)
 {
